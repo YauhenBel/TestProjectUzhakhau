@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.genya.testprojectuzhakhau.R;
+import com.example.genya.testprojectuzhakhau.objects.Data;
 
 import java.util.ArrayList;
 
@@ -17,9 +18,9 @@ import static android.content.ContentValues.TAG;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
-    private ArrayList<Integer> arrayList;
+    private ArrayList<Data> arrayList;
 
-    public Adapter(ArrayList<Integer> arrayList) {
+    public Adapter(ArrayList<Data> arrayList) {
         this.arrayList = arrayList;
     }
 
@@ -34,7 +35,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull Adapter.ViewHolder holder, int position) {
         int i = arrayList.size() - 1 - position;
-        holder.textView.setText(String.valueOf(arrayList.get(i)));
+        holder.textView.setText(String.valueOf(arrayList.get(i).getNumber()));
         Log.i(TAG, "onBindViewHolder: " + i);
     }
 
