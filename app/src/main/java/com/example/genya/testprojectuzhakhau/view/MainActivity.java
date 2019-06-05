@@ -1,7 +1,9 @@
-package com.example.genya.testprojectuzhakhau;
+package com.example.genya.testprojectuzhakhau.view;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.genya.testprojectuzhakhau.R;
 
 public class MainActivity extends AppCompatActivity {
 
