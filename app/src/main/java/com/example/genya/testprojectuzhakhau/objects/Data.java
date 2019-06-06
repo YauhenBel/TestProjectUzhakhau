@@ -1,6 +1,7 @@
 package com.example.genya.testprojectuzhakhau.objects;
-
+//класс объекта, в котором будет храниться информация и идентификационны номер в БД
 public class Data {
+
 
     private int id, number;
 

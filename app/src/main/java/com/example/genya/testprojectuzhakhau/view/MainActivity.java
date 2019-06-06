@@ -1,5 +1,6 @@
 package com.example.genya.testprojectuzhakhau.view;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,23 +15,27 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity" ;
-    MainActivityPresenter mainActivityPresenter;
-    RecyclerView recyclerView;
-    ArrayList<Data> listData;
+    private MainActivityPresenter mMainActivityPresenter;
+    private RecyclerView mRecyclerView;
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mainActivityPresenter = new MainActivityPresenter();
+        preferences = getSharedPreferences("info", MODE_PRIVATE);
+        mMainActivityPresenter = new MainActivityPresenter(this, preferences);
         init();
+
 
     }
 
+    //инициализируем данными recyclerView
     private void init(){
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(mainActivityPresenter.getAdapter(listData));
+
+        mRecyclerView = findViewById(R.id.recyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(mMainActivityPresenter.getAdapter());
     }
 
 
