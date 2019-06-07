@@ -2,6 +2,8 @@ package com.example.genya.testprojectuzhakhau.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
+public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements Parcelable {
 
     private ArrayList<Data> arrayList;
     private MainActivityPresenter mainPresenter;
@@ -33,6 +35,21 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         mainPresenter = new MainActivityPresenter(context);
 
     }
+
+    protected Adapter(Parcel in) {
+    }
+
+    public static final Creator<Adapter> CREATOR = new Creator<Adapter>() {
+        @Override
+        public Adapter createFromParcel(Parcel in) {
+            return new Adapter(in);
+        }
+
+        @Override
+        public Adapter[] newArray(int size) {
+            return new Adapter[size];
+        }
+    };
 
     @Override
     public int getItemViewType(int position) {
@@ -117,6 +134,15 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         return arrayList.size();
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+    }
+
     //создаем объект текстового поля из макета
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView textView;
@@ -128,5 +154,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             button = itemView.findViewById(R.id.btnAdd);
             imageButton = itemView.findViewById(R.id.btnDel);
         }
+    }
+
+    public ArrayList<Data> getArrayList() {
+        return arrayList;
     }
 }

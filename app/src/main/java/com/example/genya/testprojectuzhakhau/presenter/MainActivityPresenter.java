@@ -33,7 +33,6 @@ public class MainActivityPresenter {
     //возвращаем адаптер с данными для recyclerView
     public Adapter getAdapter(){
         Adapter adapter = new Adapter(getData(), context);
-        mainActivityModel.workWithDB();
         return adapter;
     }
 
