@@ -41,6 +41,10 @@ public class MainActivityPresenter {
         return new Data((int) mainActivityModel.addDataInDB(number), number);
     }
 
+    public void delElement(int id){
+        mainActivityModel.delDataFromDB(id);
+    }
+
 
 
 

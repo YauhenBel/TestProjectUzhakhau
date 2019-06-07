@@ -96,6 +96,15 @@ public class MainActivityModel {
         SQLiteDatabase db = sqLiteDB.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(DataTable.COLUMN.NUMBERS, number);
-        return db.insert(DataTable.TABLE, null, cv);
+        long lastID = db.insert(DataTable.TABLE, null, cv);
+        sqLiteDB.close();
+        return lastID;
+    }
+
+    public void delDataFromDB(int id){
+        SQLiteDB sqLiteDB = new SQLiteDB(mContext);
+        SQLiteDatabase db = sqLiteDB.getWritableDatabase();
+        long lastID = db.delete(DataTable.TABLE, DataTable.COLUMN.ID + "=" + id, null);
+        sqLiteDB.close();
     }
 }

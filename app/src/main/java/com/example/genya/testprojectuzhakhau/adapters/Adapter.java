@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 
@@ -69,10 +70,17 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final Adapter.ViewHolder holder, final int position) {
 
-        int i = arrayList.size() - 1 - position;
+        final int i = arrayList.size() - 1 - position;
         Log.i(TAG, "onBindViewHolder: " + i);
         if (arrayList.get(i) != null) {
             holder.textView.setText(String.valueOf(arrayList.get(i).getNumber()));
+            holder.imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Log.i(TAG, "onClick: id = " + arrayList.get(i).getId() + ", num = " + arrayList.get(i).getNumber());
+                    delItem(i);
+                }
+            });
 
         } else {
           holder.button.setOnClickListener(new View.OnClickListener() {
@@ -86,16 +94,22 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     @SuppressLint("ShowToast")
     private void addNewItem(){
-        arrayList.remove(arrayList.size()-1);
-        arrayList.add(mainPresenter.addNewElement(arrayList.size()));
+        int numOfDelElement = arrayList.size()-1;
+        arrayList.remove(numOfDelElement);
+        int cipherToNewRecord = arrayList.get(arrayList.size()-1).getNumber()+1;
+        arrayList.add(mainPresenter.addNewElement(cipherToNewRecord));
         arrayList.add(null);
         Log.i(TAG, "onClick: last number = " +
                 arrayList.get(arrayList.size()-2).getNumber());
         notifyDataSetChanged();
 
         //notifyItemRangeChanged(0, arrayList.size());
+    }
 
-
+    private void delItem(int i){
+        mainPresenter.delElement(arrayList.get(i).getId());
+        arrayList.remove(i);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -107,10 +121,12 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView textView;
         Button button;
+        ImageButton imageButton;
         public ViewHolder(View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.tvNumber);
             button = itemView.findViewById(R.id.btnAdd);
+            imageButton = itemView.findViewById(R.id.btnDel);
         }
     }
 }
