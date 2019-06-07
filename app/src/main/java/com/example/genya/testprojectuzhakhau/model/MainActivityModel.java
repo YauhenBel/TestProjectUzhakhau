@@ -29,6 +29,10 @@ public class MainActivityModel {
         mPref = preferences;
     }
 
+    public MainActivityModel(Context mContext) {
+        this.mContext = mContext;
+    }
+
     //работа с БД - подключение, заполнение данными, загрузка данных в приложение
     public void workWithDB(){
         Log.i(TAG, "workWithDB");
@@ -85,5 +89,13 @@ public class MainActivityModel {
 
     public ArrayList<Data> getListData() {
         return listData;
+    }
+
+    public long addDataInDB(int number){
+        SQLiteDB sqLiteDB = new SQLiteDB(mContext);
+        SQLiteDatabase db = sqLiteDB.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(DataTable.COLUMN.NUMBERS, number);
+        return db.insert(DataTable.TABLE, null, cv);
     }
 }

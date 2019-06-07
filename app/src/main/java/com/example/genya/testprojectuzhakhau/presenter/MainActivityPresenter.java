@@ -11,10 +11,17 @@ import java.util.ArrayList;
 
 public class MainActivityPresenter {
     private MainActivityModel mainActivityModel;
+    private Context context;
 
     public MainActivityPresenter(Context context, SharedPreferences preferences) {
         mainActivityModel = new MainActivityModel(context, preferences);
+        this.context = context;
 
+    }
+
+    public MainActivityPresenter(Context context){
+        mainActivityModel = new MainActivityModel(context);
+        this.context = context;
     }
 
     //обращаемся к БД для получения данных
@@ -25,9 +32,13 @@ public class MainActivityPresenter {
 
     //возвращаем адаптер с данными для recyclerView
     public Adapter getAdapter(){
-        Adapter adapter = new Adapter(getData());
+        Adapter adapter = new Adapter(getData(), context);
         mainActivityModel.workWithDB();
         return adapter;
+    }
+
+    public Data addNewElement(int number){
+        return new Data((int) mainActivityModel.addDataInDB(number), number);
     }
 
 
