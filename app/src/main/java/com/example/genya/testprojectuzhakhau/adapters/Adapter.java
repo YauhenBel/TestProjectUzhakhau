@@ -1,7 +1,6 @@
 package com.example.genya.testprojectuzhakhau.adapters;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -27,16 +25,17 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
 
     private ArrayList<Data> arrayList;
     private MainActivityPresenter mainPresenter;
+    private RecyclerView mRecyclerView;
 
 
     //конструктор
-    public Adapter(ArrayList<Data> arrayList, Context context) {
+    public Adapter(ArrayList<Data> arrayList, MainActivityPresenter mainPresenter) {
         this.arrayList = arrayList;
-        mainPresenter = new MainActivityPresenter(context);
+        this.mainPresenter = mainPresenter;
 
     }
 
-    protected Adapter(Parcel in) {
+    private Adapter(Parcel in) {
     }
 
     public static final Creator<Adapter> CREATOR = new Creator<Adapter>() {
@@ -51,35 +50,15 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         }
     };
 
-    @Override
-    public int getItemViewType(int position) {
-        int i = arrayList.size()-1-position;
-        if (arrayList.get(i) != null){
-            return 1;
-        }
-        return 0;
-    }
 
     //указываем, какой макет использовать для элементов списка
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.i(TAG, "onCreateViewHolder: viewType = " + viewType);
-        View view;
-        if (viewType == 1) {
-            view = LayoutInflater.from(parent.getContext())
+        View view= LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.designofitem, parent, false);
-        }
-        else {
-            view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.designofbuttonitem, parent, false);
-        }
-
-
         return new ViewHolder(view);
     }
-
-
 
 
 
@@ -87,47 +66,31 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
     @Override
     public void onBindViewHolder(@NonNull final Adapter.ViewHolder holder, final int position) {
 
-        final int i = arrayList.size() - 1 - position;
-        Log.i(TAG, "onBindViewHolder: " + i);
-        if (arrayList.get(i) != null) {
-            holder.textView.setText(String.valueOf(arrayList.get(i).getNumber()));
+            holder.textView.setText(String.valueOf(arrayList.get(position).getNumber()));
             holder.imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Log.i(TAG, "onClick: position = " + position);
+
                     //Log.i(TAG, "onClick: id = " + arrayList.get(i).getId() + ", num = " + arrayList.get(i).getNumber());
-                    delItem(i);
+
+                    notifyItemChanged(position);
+                    notifyItemRangeChanged(position, arrayList.size());
+                    delItem(position);
                 }
             });
-
-        } else {
-          holder.button.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View view) {
-                 addNewItem();
-              }
-          });
-        }
     }
 
-    @SuppressLint("ShowToast")
-    private void addNewItem(){
-        int numOfDelElement = arrayList.size()-1;
-        arrayList.remove(numOfDelElement);
-        int cipherToNewRecord = arrayList.get(arrayList.size()-1).getNumber()+1;
-        arrayList.add(mainPresenter.addNewElement(cipherToNewRecord));
-        arrayList.add(null);
-        Log.i(TAG, "onClick: last number = " +
-                arrayList.get(arrayList.size()-2).getNumber());
-        notifyDataSetChanged();
-
-        //notifyItemRangeChanged(0, arrayList.size());
-    }
-
-    private void delItem(int i){
-        mainPresenter.delElement(arrayList.get(i).getId());
+    private void delItem(final int i){
+        /*Log.i(TAG, "delItem: i = " + i + ", id =" + arrayList.get(i).getId() + "' num = " +
+                arrayList.get(i).getNumber() );*/
+        mainPresenter.delElement(i);
         arrayList.remove(i);
-        notifyDataSetChanged();
+
+        //notifyItemRangeChanged(arrayList.size(), 0);
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -143,15 +106,19 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
     public void writeToParcel(Parcel parcel, int i) {
     }
 
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mRecyclerView = recyclerView;
+    }
+
     //создаем объект текстового поля из макета
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView textView;
-        Button button;
         ImageButton imageButton;
         public ViewHolder(View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.tvNumber);
-            button = itemView.findViewById(R.id.btnAdd);
             imageButton = itemView.findViewById(R.id.btnDel);
         }
     }
